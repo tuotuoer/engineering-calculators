@@ -1,0 +1,314 @@
+<html>
+    <head>
+        <title>Non-Bearing 8" CMU Wall Lintel</title>
+        <meta name="description" content="This is what the page is about!">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="./css/style.css">
+        <script
+            src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+            crossorigin="anonymous"></script>
+        <script>
+            
+            $(function() {  // Run the following code after the entire HTML file has been downloaded and displayed on the browser
+                
+                var d;
+                var Le;
+                var w;
+                var M;
+
+
+                var calc1 = function() {
+
+                    // Get form input data
+                    var form_data = $('#form-parameters').serializeArray()
+
+                    // Convert form data from array to object
+                    var data = {}
+                    $.each(form_data, function() {
+                        data[this.name] = parseFloat(this.value)
+                    })
+                    console.log(data)
+
+                    // Calculate the result using formula
+                    d = (data.h *12 - 3)/12
+                    Le = Math.min(data.Lc+data.bs, data.Lc+data.h)
+                    w = data.h*85 + (data.H-data.h)*45 
+                    M = w*(Le**2)/8.0/1000.0
+
+                    // Display result on webpage
+                    $('#Le').text(Le.toFixed(2))
+                    $('#d').text(d.toFixed(2))
+                    $('#w').text(w.toFixed(2))
+                    $('#M').text(M.toFixed(2))
+
+                }
+
+                // Run calc() when button is clicked by user
+                $('#calculate-btn').click(function() {
+                    calc1()
+                    $('#results-container1').removeClass('hide')
+                })
+
+   
+                var calc2 = function() {
+
+                    // Get form input data
+                    var form_data = $('#form-parameters2').serializeArray()
+
+                    // Convert form data from array to object
+                    var data = {}
+                    $.each(form_data, function() {
+                        data[this.name] = parseFloat(this.value)
+                    })
+                    console.log(data)
+
+                    // Calculate the result using formula
+                    var Fb = 0.45*data.fm
+                    var Fs = data.Fs
+                    var n = 29000000/900/data.fm
+                    var rho = data.As/(d*12.0)/7.63
+                    var x = n*rho
+                    var k = (2*x+x**2)**0.5 - x
+                    var j = 1- k/3.0
+                    var f_m = (2*M*12*1000)/(j*k*7.63*(d*12)**2)
+                    var SR1 = f_m/Fb
+                    var f_s = (M*12*1000)/(j*rho*7.63*(d*12)**2)
+                    var SR2 = f_s/Fs
+
+                    // Display result on webpage
+                    $('#Fb').text(Fb.toFixed(1))
+                    $('#Fs').text(Fs.toFixed(1))
+                    $('#rho').text(rho.toFixed(5))
+                    $('#n').text(n.toFixed(5))
+                    $('#k').text(k.toFixed(4))
+                    $('#j').text(j.toFixed(3))
+                    $('#f_m').text(f_m.toFixed(2))
+                    $('#SR1').text(SR1.toFixed(2))
+                    $('#f_s').text(f_s.toFixed(2))
+                    $('#SR2').text(SR2.toFixed(2))
+
+
+
+                }
+
+                // Run calc() when button is clicked by user
+                $('#calculate-btn2').click(function() {
+                    calc2()
+                    $('#results-container2').removeClass('hide')
+                })
+
+
+            })
+
+
+        </script>
+    </head>
+    <body>
+        <div class="container">
+
+            <h2><b>Non-Bearing 8" CMU wall Lintel</b> - TMS 402 ASD</h2>
+        
+            <br />
+            <br />
+
+            <h3><b>- Assumptions: </b></h3>
+
+            <br />
+
+            <p> *  85 psf for Solid Grouted 8" CMU wall weight; 45 psf for Hollow 8" CMU wall weight </p>
+            <br />
+            
+            <div class="row">
+                
+                <div class="col-sm-12">
+                    
+                    <img src="images/CMU lintel.png" height=300/>
+                    <br/>
+                    <br/>
+                    <br/>
+
+                    <form class="form-horizontal" id="form-parameters">
+
+
+                        <div class="form-group">
+                            <h5 class="question">Width of Wall Opening - Clear Span</h5>
+                            <label class="col-sm-1 control-label"> Lc =</label>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="Lc" placeholder="">
+                                    <span class="input-group-addon"> ft. </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5 class="question">Width of CMU Wall Pier at Lintel Support</h5>
+                            <label class="col-sm-1 control-label"> bs =</label>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="bs" placeholder="">
+                                    <span class="input-group-addon"> ft. </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5 class="question">Height of Lintel Beam - Solid Grouted CMU Depth</h5>
+                            <label class="col-sm-1 control-label"> h =</label>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="h" placeholder="">
+                                    <span class="input-group-addon"> ft. </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5 class="question">Total Height of CMU Wall above Opening </h5>
+                            <label class="col-sm-1 control-label"> H =</label>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="H" placeholder="">
+                                    <span class="input-group-addon"> ft. </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="pull-right">
+                            <div type="submit" class="btn btn-primary btn-lg" id="calculate-btn">Calculate</div>
+                            <div type="submit" class="btn btn-default btn-lg">Reset</div>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div> <!-- end .row -->
+
+            <div class="row">
+                <div class="col-sm-8 results-container hide" id="results-container1">
+
+                    <h5> The Effective Span Length : </h5>
+                    <h4>Le = <span id="Le">  </span> ft. </h4>
+                    <br />
+
+                    <h5> The Effective Beam Depth : </h5>
+                    <h4>d = <span id="d">  </span> ft. </h4>
+                    <br />
+
+                    <h5> The Uniform Load of CMU Wall above Opening: </h5>
+                    <h4>w = <span id="w">  </span> lb/ft </h4>
+                    <br />
+                    
+                    <h5> The Maximum Bending Moment: </h5>
+                    <h4>M = <span id="M">  </span> ft-kips </h4>
+                    <br />
+                </div>
+            </div>
+            
+            <div class="row">
+                
+                <div class="col-sm-12">
+                    
+                    <img src="images/masonrybeam.PNG" height=300/>
+                    <br/>
+                    <br/>
+                    <br/>
+
+                    <form class="form-horizontal" id="form-parameters2">
+
+
+                        <div class="form-group">
+                            <h5 class="question">Tension Reinforcement Area (in<sup>2</sup>)</h5>
+                            <label class="col-sm-1 control-label">As =</label>
+                            <div class="col-sm-5">
+                                <select class="form-control" name="As">
+                                    <option value="0.4">2 - #4 = 0.4 in<sup>2</sup></option>
+                                    <option value="0.62">2 - #5 = 0.62 in<sup>2</sup></option>
+                                    <option value="0.88">2 - #6 =  0.88 in<sup>2</sup></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5 class="question">Specified Masonry Compressive Strength</h5>
+                            <label class="col-sm-1 control-label"> f'm =</label>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="fm" placeholder="">
+                                    <span class="input-group-addon"> psi </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h5 class="question">Yeild Strength of Reinforcement</h5>
+                            <label class="col-sm-1 control-label">fy =</label>
+                            <div class="col-sm-5">
+                                <select class="form-control" name="Fs">
+                                    <option value="32000"> 60,000 psi - Grade 60 </option>
+                                    <option value="20000"> 50,000 psi - Grade 50 </option>
+                                    <option value="20000"> 40,000 psi - Grade 40 </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+                        <div class="pull-right">
+                            <div type="submit" class="btn btn-primary btn-lg" id="calculate-btn2">Calculate</div>
+                            <div type="submit" class="btn btn-default btn-lg">Reset</div>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div> <!-- end .row -->
+
+            <div class="row">
+                <div class="col-sm-8 results-container hide" id="results-container2">
+
+                    <h5> The Allowable Compressive Stress in Masonry  : </h5>
+                    <h4>Fb = <span id="Fb">  </span> psi </h4>
+                    <br />
+
+                    <h5> The Allowable Tensile Stress of Rebar :</h5>
+                    <h4>Fs = <span id="Fs">  </span> psi </h4>
+                    <br />
+
+                    <h5> The Tension Reinforcement Ratio : </h5>
+                    <h4>rho = <span id="rho">  </span></h4>
+                    <br />
+
+                    <h5> The Modular Ratio - Es/Em : </h5>
+                    <h4> n = <span id="n">  </span></h4>
+                    <br />
+
+                    <h5> The Neutral Axis Depth Factor : </h5>
+                    <h4> k = <span id="k">  </span></h4>
+                    <br />
+
+                    <h5> The Lever Arm Factor : </h5>
+                    <h4> j = <span id="j">  </span></h4>
+                    <br />
+                    
+                    <h5> The Maximum Masonry Stress: </h5>
+                    <h4>f_m = <span id="f_m">  </span> psi </h4>
+                    <h5> Stress Ratio: </h5>
+                    <h4>f_m/Fb = <span id="SR1">  </span> </h4>
+                    <br />
+
+                    <h5> The Reinforcement Stress: </h5>
+                    <h4>f_s = <span id="f_s">  </span> psi </h4>
+                    <h4>f_s/Fs = <span id="SR2">  </span> </h4>
+                    <br />
+
+                </div>
+            </div>
+
+        
+        </div><!--this is the end of container-->
+    </body>
+</html>
